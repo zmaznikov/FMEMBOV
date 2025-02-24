@@ -145,15 +145,11 @@ mdl0 = deepGLMMfit(X_train0,y_train0,...
 %% different seeds
 
 MCR_DGLMM = [];
-% MCR_DGLMM_alt = [];
 for i = 1:2000
     rng(i)
     % Make prediction on a test set with true response
     Pred2 = deepGLMMpredict(mdl0,X_test0,y_test0);                        
-    % disp(['PPS on test data                : ', num2str(Pred2_bern.pps)])
-    %disp(['Classification rate on test data: ', num2str(Pred2_bern.classification_rate)])
     MCR_DGLMM = [MCR_DGLMM; Pred2.classification_rate];
-    % MCR_DGLMM_alt = [MCR_DGLMM_alt; Pred2.classification_rate_alt];
 end
 
 %% Prediction on test data
@@ -167,7 +163,6 @@ rng(1)
 Pred2 = deepGLMMpredict(mdl0,X_test0,y_test0);                           
 disp(['PPS on test data                : ', num2str(Pred2.pps)])
 disp(['Classification rate on test data: ', num2str(Pred2.classification_rate)])
-disp(['Alternative classification rate on test data: ', num2str(Pred2.classification_rate_alt)])
 
 %% Bernoulli
 
@@ -249,141 +244,36 @@ rng(1)
 Pred2_bern = deepGLMMpredict(mdl0_bern,X_test0,y_test_bern);                           
 disp(['PPS on test data                : ', num2str(Pred2_bern.pps)])
 disp(['Classification rate on test data: ', num2str(Pred2_bern.classification_rate)])
-disp(['Alternative classification rate on test data: ', num2str(Pred2.classification_rate_alt)])
 
 %% different seeds
 
 MCR_DGLMM = [];
-%MCR_DGLMM_alt = [];
 for i = 1:2000
     rng(i)
     % Make prediction on a test set with true response
     Pred2 = deepGLMMpredict(mdl0,X_test0,y_test_bern);                        
-    % disp(['PPS on test data                : ', num2str(Pred2_bern.pps)])
-    %disp(['Classification rate on test data: ', num2str(Pred2_bern.classification_rate)])
     MCR_DGLMM = [MCR_DGLMM; Pred2.classification_rate];
-    %MCR_DGLMM_alt = [MCR_DGLMM_alt; Pred2.classification_rate_alt];
 end
 %%
 figure
 histogram(MCR_DGLMM)
 
-%%
-figure
-histogram(MCR_DGLMM_alt)
 
-%% Create a new figure for the plot
-figure;
-hold on;
-title('Comparison of Last Three Entries');
-xlabel('Values from p');
-ylabel('Values from Pred2.probability\_it');
-grid on;
-
-% Define colors for first, second, and third entries
-colors = {'r', 'g', 'b'}; % Red, Green, Blue
-labels = {'First Entry', 'Second Entry', 'Third Entry'};
-
-% Loop through each cell
-for i = 1:100
-    % Extract the last three entries from p
-    lastThree_p = p{i}(end-2:end);
-    
-    % Extract the corresponding three entries from Pred2_bern.probability_it
-    lastThree_pred = Pred2.probability_it{i};
-    
-    % Plot each entry with its respective color
-    for j = 1:3
-        scatter(lastThree_p(j), lastThree_pred(j), 100, colors{j}, 'filled');
-    end
-end
-
-% Add legend for the entry positions
-legend(labels, 'Location', 'bestoutside');
-hold off;
-
-%% Create a new figure for the plot
-figure;
-hold on;
-title('Comparison of Last Three Entries');
-xlabel('Prediction\_alt');
-ylabel('Values from Pred2.probability\_it');
-grid on;
-
-% Define colors for first, second, and third entries
-colors = {'r', 'g', 'b'}; % Red, Green, Blue
-labels = {'First Entry', 'Second Entry', 'Third Entry'};
-
-% Loop through each cell
-for i = 1:100
-    % Extract the last three entries from p
-    lastThree_p = Pred2.prediction_alt{i}(end-2:end);
-    
-    % Extract the corresponding three entries from Pred2_bern.probability_it
-    lastThree_pred = Pred2.probability_it{i};
-    
-    % Plot each entry with its respective color
-    for j = 1:3
-        scatter(lastThree_p(j), lastThree_pred(j), 100, colors{j}, 'filled');
-    end
-end
-
-% Add legend for the entry positions
-legend(labels, 'Location', 'bestoutside');
-hold off;
 
 %% different seeds bern
 
 
 MCR_DGLMM_bern = [];
-MCR_DGLMM_bern_alt = [];
 for i = 1:2000
     rng(i)
     % Make prediction on a test set with true response
-    Pred2_bern = deepGLMMpredict(mdl0_bern,X_test0,y_test_bern);                      
-    % disp(['PPS on test data                : ', num2str(Pred2_bern.pps)])
-    %disp(['Classification rate on test data: ', num2str(Pred2_bern.classification_rate)])
+    Pred2_bern = deepGLMMpredict(mdl0_bern,X_test0,y_test_bern);                    
     MCR_DGLMM_bern = [MCR_DGLMM_bern; Pred2_bern.classification_rate];
-    MCR_DGLMM_bern_alt = [MCR_DGLMM_bern_alt; Pred2_bern.classification_rate_alt];
 end
 
 %%
 figure
 histogram(MCR_DGLMM_bern)
-
-%%
-figure
-histogram(MCR_DGLMM_alt_bern)
-
-%% Create a new figure for the plot
-figure;
-hold on;
-title('Comparison of Last Three Entries');
-xlabel('Values from p');
-ylabel('Values from Pred2\_bern.probability\_it');
-grid on;
-
-% Define colors for first, second, and third entries
-colors = {'r', 'g', 'b'}; % Red, Green, Blue
-labels = {'First Entry', 'Second Entry', 'Third Entry'};
-
-% Loop through each cell
-for i = 1:100
-    % Extract the last three entries from p
-    lastThree_p = p{i}(end-2:end);
-    
-    % Extract the corresponding three entries from Pred2_bern.probability_it
-    lastThree_pred = Pred2_bern.probability_it{i};
-    
-    % Plot each entry with its respective color
-    for j = 1:3
-        scatter(lastThree_p(j), lastThree_pred(j), 100, colors{j}, 'filled');
-    end
-end
-
-% Add legend for the entry positions
-legend(labels, 'Location', 'bestoutside');
-hold off;
 
 
 %% Format p for GLMM
@@ -508,21 +398,6 @@ end
 figure
 histogram(MCR_FE)
 
-% %%
-% for i = 1:20
-%     rng(i)
-%     Results = table(predict(glme, glmm_test_data), random('Binomial', 1, predict(glme, glmm_test_data)), glmm_test_data.Response);
-%     % Results
-%     mean(abs(Results.Var2-Results.Var3))
-% end
-% 
-% %%
-% for i = 1:20
-%     rng(i)
-%     Results = table(predict(FEglme, glmm_test_data), random('Binomial', 1, predict(FEglme, glmm_test_data)), glmm_test_data.Response);
-%     % Results
-%     mean(abs(Results.Var2-Results.Var3))
-% end
 
 %% CART
 
