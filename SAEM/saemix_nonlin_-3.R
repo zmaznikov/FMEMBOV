@@ -1,6 +1,8 @@
 # Install and load the saemix package
-# install.packages("saemix")
-library(saemix)
+if(!require(saemix)){
+  install.packages("saemix")
+  library(saemix)
+}
 
 # data <- read.csv("all_data_nonlin_higher_coef.csv")
 # data <- read.csv("all_data_nonlin_var1.csv")
@@ -28,30 +30,22 @@ binary.model <- function(psi, id, xidep) {
   Feature_5 <- xidep[, 5]  # Feature_5
   Response <- xidep[, 6]    # Response variable
   beta0 <- psi[id, 1]
-  beta_1 <- psi[id, 2]  # Parameter for Feature_1
-  beta_2 <- psi[id, 3]  # Parameter for Feature_2
-  beta_3 <- psi[id, 4]  # Parameter for Feature_3
+  beta_1 <- psi[id, 2]  # Parameter
+  beta_2 <- psi[id, 3]  # Parameter
+  beta_3 <- psi[id, 4]  # Parameter
   
   # Logistic regression equation
   logit <- beta0 + beta_1 * log(1 + Feature_1) + beta_2 * (Feature_2^2)/exp(Feature_3) + beta_3 * (Feature_4^3)/ Feature_5
   
   # Probability of event
   pevent <- exp(logit) / (1 + exp(logit))
-  # print(c(Feature_1[138], Feature_2[138], Feature_3[138], Feature_4[138], Feature_5[138]))
-  # print(c(beta_1 * log(1 + Feature_1[138]), beta_2 * (Feature_2[138]^2)/exp(Feature_3[138] + 1), beta_3 * (Feature_4[138])/ Feature_5[138]))
-  # print(c(logit[138], Response[138], pevent[138]))
-  # print(c(logit[248], Response[248], pevent[248]))
-  # print(c(logit[768], Response[768], pevent[768]))
-  
+
   # Observed likelihood
   pobs <- (Response == 0) * (1 - pevent) + (Response == 1) * pevent
   
   # Log probability
   logpdf <- log(pobs)
-  # print(c(pobs[138], logpdf[138]))
-  # print(c(pobs[248], logpdf[248]))
-  # print(c(pobs[768], logpdf[768]))
-  
+
   return(logpdf)
 }
 
@@ -63,9 +57,9 @@ simulBinary <- function(psi, id, xidep) {
   Feature_5 <- xidep[, 5]  # Feature_5
   Response <- xidep[, 6]    # Response variable
   beta0 <- psi[id, 1]
-  beta_1 <- psi[id, 2]  # Parameter for Feature_1
-  beta_2 <- psi[id, 3]  # Parameter for Feature_2
-  beta_3 <- psi[id, 4]  # Parameter for Feature_3
+  beta_1 <- psi[id, 2]  # Parameter
+  beta_2 <- psi[id, 3]  # Parameter
+  beta_3 <- psi[id, 4]  # Parameter
   
   # Logistic regression equation
   logit <- beta0 + beta_1 * log(1 + Feature_1) + beta_2 * (Feature_2^2)/exp(Feature_3) + beta_3 * (Feature_4^3)/ Feature_5
@@ -103,15 +97,6 @@ plot(fit)                                 # Plot observed vs predicted
 psi(fit)
 
 pred <- saemixPredictNewdata(fit,test_data)
-
-
-# # Extract individual parameters after fitting
-# estimates <- coef(fit)  # Extract fitted parameter estimates
-# 
-# # Only fixed effects
-# logit <- estimates$fixed[1] + estimates$fixed[2] * log(1+test_data$Feature_1) +
-#   estimates$fixed[3] * (test_data$Feature_2^2)/exp(test_data$Feature_3 + 1) +
-#   estimates$fixed[4] * (test_data$Feature_4^3)/ test_data$Feature_5
 
 estimates_re <- psi(fit)  # Extract fitted parameter estimates
 

@@ -1,6 +1,8 @@
 # Install and load the saemix package
-install.packages("saemix")
-library(saemix)
+if(!require(saemix)){
+  install.packages("saemix")
+  library(saemix)
+}
 
 path <- "dglmm_var0.1_s12345.csv"
 data <- read.csv(paste0("../Data/",path)) # Read the CSV file into R
